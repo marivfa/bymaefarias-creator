@@ -1,0 +1,12 @@
+---
+import MediaCard from './MediaCard.astro';
+const { c, items } = Astro.props;
+---
+<section class="section shell work-section" id="work">
+  <div class="work-heading" data-reveal>
+    <p class="eyebrow">{c.work.eyebrow}</p>
+  </div>
+  <div class="portfolio-grid">
+    {items.map((item) => <MediaCard item={item} lang={c.lang} originalLabel={c.work.original} />)}
+  </div>
+</section>

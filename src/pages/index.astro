@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Portfolio from '../components/Portfolio.astro';
+import Performance from '../components/Performance.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import { copy } from '../data/copy';
+import { portfolio, topReel } from '../data/portfolio';
+const c = copy.en;
+---
+<BaseLayout lang="en" title="By Mae — Food, Motherhood & Everyday Lifestyle Creator" description="Texas-based Latina content creator creating Spanish-first food, motherhood and everyday lifestyle content for brands." canonicalPath="/" alternatePath="/es/">
+  <Header c={c} />
+  <main>
+    <Hero c={c} />
+    <Portfolio c={c} items={portfolio} />
+    <Performance c={c} reel={topReel} />
+    <Services c={c} />
+    <About c={c} />
+    <Contact c={c} />
+  </main>
+</BaseLayout>

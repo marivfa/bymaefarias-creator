@@ -1,0 +1,39 @@
+---
+const { c, reel } = Astro.props;
+const hasVideo = Boolean(reel.videoSrc);
+const hasPoster = Boolean(reel.poster);
+---
+<section class="performance-wrap" id="performance">
+  <div class="performance shell" data-reveal>
+    <div class={`performance-media ${hasVideo ? 'performance-media-video' : ''} ${hasPoster ? 'has-poster' : ''}`}>
+      {hasVideo ? (
+        <>
+          <video data-portfolio-video muted playsinline preload="metadata" poster={reel.poster || undefined} aria-label={reel.title[c.lang]}>
+            <source src={reel.videoSrc} type="video/mp4" />
+          </video>
+          {hasPoster && <img class="video-poster" src={reel.poster} alt={`${reel.title[c.lang]} thumbnail`} loading="lazy" />}
+          <button class="play-badge video-toggle" type="button" aria-label={`Play or pause ${reel.title[c.lang]}`} data-play-toggle>
+            <span class="play-icon" aria-hidden="true">▶</span>
+          </button>
+        </>
+      ) : hasPoster ? (
+        <img src={reel.poster} alt={`${reel.title[c.lang]} thumbnail`} loading="lazy" />
+      ) : (
+        <div class="performance-placeholder">
+          <span>VENEZUELA</span>
+          <strong>$150</strong>
+          <small>Add reel video / poster</small>
+        </div>
+      )}
+    </div>
+    <div class="performance-copy">
+      <p class="eyebrow teal">{c.performance.eyebrow}</p>
+      <h2>{c.performance.title}</h2>
+      <p>{reel.description[c.lang]}</p>
+      <a class="text-link" href={reel.reelUrl} target="_blank" rel="noreferrer">{c.performance.original} ↗</a>
+    </div>
+    <div class="stats" aria-label="Top reel metrics">
+      {reel.stats.map((stat) => <div class="stat"><strong>{stat.value}</strong><span>{stat.label[c.lang]}</span></div>)}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+---
+import Brand from './Brand.astro';
+const { c } = Astro.props;
+---
+<header class="site-header shell">
+  <Brand href={c.lang === 'es' ? '/es/' : '/'} />
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="#work">{c.nav.work}</a>
+    <a href="#about">{c.nav.about}</a>
+    <a href="#contact">{c.nav.contact}</a>
+  </nav>
+  <div class="header-actions">
+    <a class="lang-switch" href={c.alternatePath}>{c.lang.toUpperCase()} <span>/</span> {c.alternateLabel}</a>
+    <a class="button button-small" href="#contact">{c.nav.cta}</a>
+  </div>
+</header>

@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+interface Props {
+  lang: 'en' | 'es';
+  title: string;
+  description: string;
+  canonicalPath: string;
+  alternatePath: string;
+}
+const { lang, title, description, canonicalPath, alternatePath } = Astro.props;
+const canonical = new URL(canonicalPath, Astro.site);
+const alternate = new URL(alternatePath, Astro.site);
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'en' ? 'es' : 'en'} href={alternate} />
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+    <script is:inline>
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+      const videos = [...document.querySelectorAll('video[data-portfolio-video]')].filter((video) => video instanceof HTMLVideoElement);
+      let activeVideo = null;
+
+      const setButtonState = (video) => {
+        const frame = video.closest('.media-frame, .performance-media');
+        const button = frame?.querySelector('[data-play-toggle]');
+        const icon = button?.querySelector('.play-icon');
+        if (!button || !icon) return;
+        const isPlaying = !video.paused;
+        button.setAttribute('aria-pressed', String(isPlaying));
+        icon.textContent = isPlaying ? '❚❚' : '▶';
+        frame.classList.toggle('is-playing', isPlaying);
+      };
+
+      const pauseVideo = (video) => {
+        video.pause();
+        setButtonState(video);
+      };
+
+      const pauseOthers = (active) => {
+        videos.forEach((video) => { if (video !== active) pauseVideo(video); });
+      };
+
+      document.querySelectorAll('[data-play-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const frame = button.closest('.media-frame, .performance-media');
+          const video = frame?.querySelector('video');
+          if (!(video instanceof HTMLVideoElement)) return;
+
+          if (!video.paused) {
+            pauseVideo(video);
+            if (activeVideo === video) activeVideo = null;
+          } else {
+            activeVideo = video;
+            pauseOthers(video);
+            frame?.classList.add('has-started');
+            video.play().catch(() => {});
+            setButtonState(video);
+          }
+        });
+      });
+
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.target instanceof HTMLVideoElement && !entry.isIntersecting) {
+            pauseVideo(entry.target);
+            if (activeVideo === entry.target) activeVideo = null;
+          }
+        });
+      }, { threshold: .15 });
+
+      videos.forEach((video) => {
+        videoObserver.observe(video);
+        video.addEventListener('play', () => setButtonState(video));
+        video.addEventListener('pause', () => setButtonState(video));
+        video.addEventListener('ended', () => {
+          const frame = video.closest('.media-frame, .performance-media');
+          frame?.classList.remove('has-started');
+          video.currentTime = 0;
+          activeVideo = null;
+          setButtonState(video);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  small?: boolean;
+  href?: string;
+}
+
+const { small = false, href } = Astro.props as Props;
+const className = `brand ${small ? 'brand-small' : ''}`;
+---
+
+{href ? (
+  <a class={className} href={href} aria-label={`${site.brand} home`}>
+    {site.logoSrc ? (
+      <img class="brand-logo" src={site.logoSrc} alt={site.logoAlt} />
+    ) : (
+      <>
+        <span class="brand-by">by</span>
+        <span class="brand-mae">Mae</span>
+        <span class="brand-farias">Farias</span>
+      </>
+    )}
+  </a>
+) : (
+  <div class={className} aria-label={site.brand}>
+    {site.logoSrc ? (
+      <img class="brand-logo" src={site.logoSrc} alt={site.logoAlt} />
+    ) : (
+      <>
+        <span class="brand-by">by</span>
+        <span class="brand-mae">Mae</span>
+        <span class="brand-farias">Farias</span>
+      </>
+    )}
+  </div>
+)}

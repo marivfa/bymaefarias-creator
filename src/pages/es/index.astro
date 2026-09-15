@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import Portfolio from '../../components/Portfolio.astro';
+import Performance from '../../components/Performance.astro';
+import Services from '../../components/Services.astro';
+import About from '../../components/About.astro';
+import Contact from '../../components/Contact.astro';
+import { copy } from '../../data/copy';
+import { portfolio, topReel } from '../../data/portfolio';
+const c = copy.es;
+---
+<BaseLayout lang="es" title="By Mae — Food, Maternidad & Everyday Lifestyle" description="Creadora de contenido latina basada en Texas. Food, maternidad y everyday lifestyle para marcas que encajan en la vida real." canonicalPath="/es/" alternatePath="/">
+  <Header c={c} />
+  <main>
+    <Hero c={c} />
+    <Portfolio c={c} items={portfolio} />
+    <Performance c={c} reel={topReel} />
+    <Services c={c} />
+    <About c={c} />
+    <Contact c={c} />
+  </main>
+</BaseLayout>

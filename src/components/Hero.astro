@@ -1,0 +1,35 @@
+---
+import { site } from '../data/site';
+const { c } = Astro.props;
+const visuals = site.heroVisuals || [];
+---
+<section class="hero-wrap">
+  <div class="hero shell">
+    <div class="hero-copy" data-reveal>
+      <p class="eyebrow">{c.hero.eyebrow}</p>
+      <h1><span>{c.hero.title1}</span><br />{c.hero.title2}</h1>
+      <p class="hero-body">{c.hero.body}</p>
+      <div class="hero-cta-row">
+        <a class="button button-coral" href="#work">{c.hero.cta} <span>↓</span></a>
+        <p class="hand-note hero-note"><span class="note-line" aria-hidden="true"></span>{c.hero.note} ♡</p>
+      </div>
+    </div>
+
+    <div class="hero-media" aria-label="Creator content previews">
+      <div class="hero-collage">
+        {visuals.map((visual, index) => (
+          <figure class={`hero-visual hero-visual-${index + 1}`} data-reveal>
+            {visual.src ? (
+              <img src={visual.src} alt={visual.alt} loading="eager" />
+            ) : (
+              <div class="hero-visual-placeholder">
+                <span>{visual.label}</span>
+                <small>Add a hero image in site.ts</small>
+              </div>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

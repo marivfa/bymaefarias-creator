@@ -1,0 +1,25 @@
+---
+import { site } from '../data/site';
+const { c } = Astro.props;
+---
+<section class="about-wrap" id="about">
+  <div class="about shell" data-reveal>
+    {site.aboutImage ? (
+      <div class="about-image">
+        <img src={site.aboutImage} alt="Mari, creator behind byMaeFarias" loading="lazy" />
+      </div>
+    ) : (
+      <div class="about-image placeholder-photo" role="img" aria-label="Portrait placeholder">
+        <span>Add your portrait here</span>
+      </div>
+    )}
+    <div class="about-copy">
+      <p class="eyebrow">{c.about.eyebrow}</p>
+      <h2>{c.about.title}</h2>
+      <p>{c.about.body}</p>
+      <p>{c.about.body2}</p>
+      <p class="language-line">{c.about.language}</p>
+    </div>
+    <p class="hand-note about-note">{c.about.note} ♡</p>
+  </div>
+</section>
