@@ -20,12 +20,12 @@ export const site = {
   heroVisuals: [
     {
       src: '/images/hero/hero-food.jpg',
-      alt: 'Food content by Mari',
+      alt: 'Mari creating food and lifestyle content in her kitchen',
       label: 'Food',
     },
     {
       src: '/images/hero/hero-motherhood.jpg',
-      alt: 'Motherhood content by Mari',
+      alt: 'Mari with her toddler in their kitchen',
       label: 'Motherhood',
     },
   ],

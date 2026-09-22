@@ -6,7 +6,12 @@ const { c } = Astro.props;
   <div class="about shell" data-reveal>
     {site.aboutImage ? (
       <div class="about-image">
-        <img src={site.aboutImage} alt="Mari, creator behind byMaeFarias" loading="lazy" />
+        <img
+          src={site.aboutImage}
+          alt="Mari, creator behind byMaeFarias"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     ) : (
       <div class="about-image placeholder-photo" role="img" aria-label="Portrait placeholder">

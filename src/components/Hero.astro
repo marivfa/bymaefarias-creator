@@ -20,7 +20,12 @@ const visuals = site.heroVisuals || [];
         {visuals.map((visual, index) => (
           <figure class={`hero-visual hero-visual-${index + 1}`} data-reveal>
             {visual.src ? (
-              <img src={visual.src} alt={visual.alt} loading="eager" />
+              <img
+                src={visual.src}
+                alt={visual.alt}
+                loading="eager"
+                decoding="async"
+              />
             ) : (
               <div class="hero-visual-placeholder">
                 <span>{visual.label}</span>

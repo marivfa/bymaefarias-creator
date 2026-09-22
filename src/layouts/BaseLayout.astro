@@ -14,15 +14,70 @@ const alternate = new URL(alternatePath, Astro.site);
 <!doctype html>
 <html lang={lang}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffff" />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={lang === 'en' ? 'es' : 'en'} href={alternate} />
-    <link rel="alternate" hreflang={lang} href={canonical} />
-    <title>{title}</title>
-  </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Canonical + languages -->
+  <link rel="canonical" href={canonical} />
+  <link
+    rel="alternate"
+    hreflang={lang === 'en' ? 'es' : 'en'}
+    href={alternate}
+  />
+  <link rel="alternate" hreflang={lang} href={canonical} />
+  <link
+    rel="alternate"
+    hreflang="x-default"
+    href={new URL('/', Astro.site)}
+  />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="byMaeFarias" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_US'} />
+  <meta
+    property="og:locale:alternate"
+    content={lang === 'en' ? 'es_US' : 'en_US'}
+  />
+  <meta
+    property="og:image"
+    content={new URL('/images/og/bymaefarias-og.jpg', Astro.site)}
+  />
+
+  <!-- Social sharing -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta
+    name="twitter:image"
+    content={new URL('/images/og/bymaefarias-og.jpg', Astro.site)}
+  />
+
+  <!-- Structured data -->
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Mari",
+      "url": "https://www.bymaefarias.com/",
+      "image": "https://www.bymaefarias.com/images/about-mari.jpg",
+      "sameAs": [
+        "https://www.instagram.com/bymaefarias/"
+      ],
+      "jobTitle": "Content Creator",
+      "description":
+        "Texas-based Latina content creator creating Spanish-first food, motherhood and everyday lifestyle content."
+    })}
+  />
+
+  <title>{title}</title>
+</head>
   <body>
     <slot />
     <script is:inline>
