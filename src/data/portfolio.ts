@@ -8,6 +8,20 @@ export type PortfolioItem = {
 };
 
 export const portfolio: PortfolioItem[] = [
+    {
+    slug: 'yuca-waffles',
+    title: {
+      en: 'Yuca Waffles',
+      es: 'Waffles de yuca'
+    },
+    eyebrow: {
+      en: 'Food · Organic product integration',
+      es: 'Comida · Integración orgánica de producto'
+    },
+    reelUrl: 'https://www.instagram.com/reel/Dd_pXYwOO0w/?utm_source=ig_web_copy_link&srtk=MzRlODBiNWFlZA==',
+    videoSrc: '/videos/yuca-waffles.mp4',
+    poster: '/images/posters/yuca-waffles.jpg',
+  },
   {
     slug: 'funche',
     title: { en: 'Funche', es: 'Funche' },
