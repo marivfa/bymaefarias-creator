@@ -9,6 +9,15 @@
   --muted: #5f6875;
   --line: #e7e8e7;
   --white: #fff;
+  /* Shared surface and translucent palette tokens for secondary pages */
+  --surface-soft: color-mix(in srgb, var(--mint) 22%, var(--white));
+  --line-soft: color-mix(in srgb, var(--teal) 15%, var(--white));
+  --line-hover: color-mix(in srgb, var(--teal) 34%, var(--white));
+  --coral-deep: color-mix(in srgb, var(--coral) 74%, var(--ink));
+  --contact-highlight: color-mix(in srgb, var(--teal) 85%, var(--white));
+  --on-dark-muted: color-mix(in srgb, var(--white) 84%, transparent);
+  --card-shadow-soft: 0 8px 24px color-mix(in srgb, var(--ink) 3%, transparent);
+  --card-shadow-hover: 0 16px 34px color-mix(in srgb, var(--ink) 8%, transparent);
   --serif: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Baskerville, Georgia, serif;
   --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --script: 'Segoe Print', 'Bradley Hand', 'Brush Script MT', cursive;

@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Contact from '../../components/Contact.astro';
+import Header from '../../components/Header.astro';
+import ResourcesCatalog from '../../components/ResourcesCatalog.astro';
+import { copy } from '../../data/copy';
+import '../../styles/resources.css';
+const c = copy.en;
+---
+<BaseLayout lang="en" title="Resources | byMaeFarias" description="Free printables, everyday favorites and planners created by Mari. Explore useful resources from byMaeFarias." canonicalPath="/resources/" alternatePath="/es/resources/">
+  <Header c={{ ...c, alternatePath: '/es/resources/' }} />
+  <main><ResourcesCatalog lang="en" />
+    <Contact c={{ ...c, alternatePath: '/es/resources/' }} /></main>
+</BaseLayout>

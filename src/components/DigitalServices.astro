@@ -1,0 +1,72 @@
+---
+import { digitalServices, selectedDigitalProject, digitalServicesCopy, type Locale } from '../data/digitalServices';
+const { lang } = Astro.props as { lang: Locale };
+const home = lang === 'es' ? '/es/' : '/';
+const hero = digitalServicesCopy[lang];
+---
+<section class="digital-services-page">
+  <div class="digital-services-hero">
+    <div class="shell digital-services-hero-inner">
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <div class="digital-services-hero-layout">
+        <div class="digital-services-hero-copy">
+          <h1>{hero.title}</h1>
+          <p class="digital-services-lead">{hero.body}</p>
+        </div>
+        <p class="hand-note digital-services-hand-note">
+          <span class="note-line" aria-hidden="true"></span>
+          <span>{hero.heroNote} <span aria-hidden="true">♡</span></span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="shell digital-services-content">
+    <p class="eyebrow digital-services-section-heading">{hero.sectionHeading}</p>
+    <div class="digital-services-list">
+      {digitalServices.map((service) => (
+        <article class:list={['digital-service', { 'has-image': Boolean(service.image) }]} id={service.id}>
+          <div class="digital-service-copy">
+            <div class="digital-service-heading">
+              <span class:list={['digital-service-icon', { 'digital-service-icon-tech': service.id.includes('digital') }]} aria-hidden="true">
+                {service.id.includes('digital') ? (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9Z"/></svg>
+                )}
+              </span>
+              <h2>{service.name[lang]}</h2>
+            </div>
+            <p class="digital-service-tagline">{service.title[lang]}</p>
+            {service.paragraphs[lang].map((paragraph) => <p>{paragraph}</p>)}
+            <a class="digital-service-action" href={`${home}#contact`} data-track-event="service_contact_click" data-track-id={service.id}>
+              {hero.serviceCta} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          {service.image && (
+            <div class="digital-service-image">
+              <img src={service.image.src} alt={service.image.alt[lang]} loading="lazy" decoding="async" />
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+    {selectedDigitalProject.enabled && (
+      <section class="selected-digital-project" aria-labelledby="selected-digital-project-title">
+        <p class="eyebrow">{hero.projectEyebrow}</p>
+        <h2 id="selected-digital-project-title">{selectedDigitalProject.title[lang]}</h2>
+        {selectedDigitalProject.description[lang] && <p>{selectedDigitalProject.description[lang]}</p>}
+        {selectedDigitalProject.image && <img src={selectedDigitalProject.image.src} alt={selectedDigitalProject.image.alt[lang]} loading="lazy" decoding="async" />}
+        {selectedDigitalProject.url && <a class="text-link" href={selectedDigitalProject.url}>{hero.viewProject} ↗</a>}
+      </section>
+    )}
+    <aside class="digital-services-footnote" aria-label={hero.portfolioLabel}>
+      <div class="digital-services-portfolio-copy">
+        <p class="digital-services-portfolio-eyebrow">{hero.portfolioLabel}</p>
+        <p>{hero.portfolioPrompt}</p>
+      </div>
+      <a href={`${home}#work`} data-track-event="portfolio_click" data-track-id="services_portfolio_link">{hero.portfolioLink} <span aria-hidden="true">↗</span></a>
+    </aside>
+  </div>
+
+
+</section>

@@ -1,16 +1,75 @@
 ---
 import Brand from './Brand.astro';
 const { c } = Astro.props;
+const home = c.lang === 'es' ? '/es/' : '/';
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const activePage = pathname.endsWith('/services') ? 'services' : pathname.endsWith('/resources') ? 'resources' : '';
+const navItems = [
+  { key: 'work', label: c.nav.work, href: `${home}#work` },
+  { key: 'about', label: c.nav.about, href: `${home}#about` },
+  { key: 'services', label: c.nav.services, href: c.lang === 'es' ? '/es/services/' : '/services/' },
+  { key: 'resources', label: c.nav.resources, href: c.lang === 'es' ? '/es/resources/' : '/resources/' },
+  { key: 'contact', label: c.nav.contact, href: `${home}#contact` },
+];
 ---
-<header class="site-header shell">
-  <Brand href={c.lang === 'es' ? '/es/' : '/'} />
-  <nav class="desktop-nav" aria-label="Primary navigation">
-    <a href="#work">{c.nav.work}</a>
-    <a href="#about">{c.nav.about}</a>
-    <a href="#contact">{c.nav.contact}</a>
-  </nav>
-  <div class="header-actions">
-    <a class="lang-switch" href={c.alternatePath}>{c.lang.toUpperCase()} <span>/</span> {c.alternateLabel}</a>
-    <a class="button button-small" href="#contact">{c.nav.cta}</a>
-  </div>
-</header>
+<div class="site-header-wrap">
+  <header class="site-header shell">
+    <Brand href={home} />
+    <nav class="desktop-nav" aria-label={c.lang === 'es' ? 'Navegación principal' : 'Primary navigation'}>
+      {navItems.map((item) => <a href={item.href} data-nav-key={item.key} class:list={{ "is-current": activePage === item.key }} aria-current={activePage === item.key ? "page" : undefined}>{item.label}</a>)}
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch" role="group" aria-label={c.lang === 'es' ? 'Seleccionar idioma' : 'Select language'}>
+        {c.lang === 'en' ? (
+          <span class="lang-option is-active" aria-label="English, selected">EN</span>
+        ) : (
+          <a class="lang-option" href={c.alternatePath} hreflang="en" aria-label="Switch to English">EN</a>
+        )}
+        <span class="lang-divider" aria-hidden="true">/</span>
+        {c.lang === 'es' ? (
+          <span class="lang-option is-active" aria-label="Español, seleccionado">ES</span>
+        ) : (
+          <a class="lang-option" href={c.alternatePath} hreflang="es" aria-label="Cambiar a español">ES</a>
+        )}
+      </div>
+      <a class="button button-small header-desktop-cta" href={`${home}#contact`} data-track-event="contact_click" data-track-id="header_cta">{c.nav.cta}</a>
+      <details class="mobile-nav">
+        <summary aria-label={c.lang === 'es' ? 'Abrir navegación' : 'Open navigation'}>
+          <span class="mobile-nav-icon" aria-hidden="true">☰</span>
+          <span>{c.nav.menu}</span>
+        </summary>
+        <nav aria-label={c.lang === 'es' ? 'Navegación móvil' : 'Mobile navigation'}>
+          {navItems.map((item) => <a href={item.href} data-nav-key={item.key} class:list={{ "is-current": activePage === item.key }} aria-current={activePage === item.key ? "page" : undefined}>{item.label}</a>)}
+          <a class="button button-small mobile-nav-cta" href={`${home}#contact`} data-track-event="contact_click" data-track-id="header_cta">{c.nav.cta}</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+</div>
+<script>
+  const updateNavState = () => {
+    const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+    const isHome = pathname === '/' || pathname === '/es';
+    const hash = isHome ? window.location.hash.slice(1) : '';
+    document.querySelectorAll<HTMLAnchorElement>('[data-nav-key]').forEach((link) => {
+      const key = link.dataset.navKey;
+      const active = key === 'services' ? pathname.endsWith('/services') : key === 'resources' ? pathname.endsWith('/resources') : Boolean(hash && key === hash);
+      link.classList.toggle('is-current', active);
+      if (active) link.setAttribute('aria-current', key === 'services' || key === 'resources' ? 'page' : 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+  updateNavState();
+  window.addEventListener('hashchange', updateNavState);
+  document.querySelectorAll<HTMLDetailsElement>('.mobile-nav').forEach((details) => {
+    details.querySelectorAll('nav a').forEach((link) => {
+      link.addEventListener('click', () => { details.open = false; });
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') details.open = false;
+    });
+    document.addEventListener('click', (event) => {
+      if (details.open && event.target instanceof Node && !details.contains(event.target)) details.open = false;
+    });
+  });
+</script>

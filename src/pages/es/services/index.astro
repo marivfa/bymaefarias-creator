@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Contact from '../../../components/Contact.astro';
+import Header from '../../../components/Header.astro';
+import DigitalServices from '../../../components/DigitalServices.astro';
+import { copy } from '../../../data/copy';
+import '../../../styles/digital-services.css';
+const c = copy.es;
+---
+<BaseLayout lang="es" title="Servicios Creativos y Digitales | byMaeFarias" description="Edición de videos cortos y orientación digital práctica para creadores y pequeños negocios." canonicalPath="/es/services/" alternatePath="/services/">
+  <Header c={{ ...c, alternatePath: '/services/' }} />
+  <main>
+    <DigitalServices lang="es" />
+    <Contact c={{ ...c, alternatePath: '/services/' }} />
+  </main>
+</BaseLayout>

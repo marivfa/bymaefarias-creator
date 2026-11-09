@@ -1,0 +1,55 @@
+---
+import { site } from '../data/site';
+import { links, linksCopy, linksSocial, resolveLink } from '../data/links';
+import type { ResourceLocale } from '../data/resources';
+import '../styles/links.css';
+interface Props { lang: ResourceLocale }
+const { lang } = Astro.props;
+const t = linksCopy[lang];
+const items = links.map((item) => resolveLink(item, lang)).filter((item) => item !== null);
+const socials = linksSocial.filter((social) => social.active && !!social.url);
+const hasAffiliate = items.some((item) => item.affiliate);
+const contactUrl = lang === 'es' ? '/es/#contact-form' : '/#contact-form';
+const enUrl = '/links/';
+const esUrl = '/es/links/';
+---
+<main class="links-page">
+  <div class="links-shell">
+    <div class="links-top"><nav class="links-language-switch" aria-label={lang === 'es' ? 'Idioma' : 'Language'}><a href={enUrl} lang="en" hreflang="en" class:list={['links-language-option', { 'is-active': lang === 'en' }]} aria-current={lang === 'en' ? 'page' : undefined}>EN</a><span aria-hidden="true" class="links-language-divider">/</span><a href={esUrl} lang="es" hreflang="es" class:list={['links-language-option', { 'is-active': lang === 'es' }]} aria-current={lang === 'es' ? 'page' : undefined}>ES</a></nav></div>
+    <header class="links-profile">
+      <img src={site.aboutImage} alt="Mari" class="links-avatar" width="92" height="92" />
+      <h1>{t.heading}</h1>
+      <p class="links-subtitle">{t.subtitle}</p>
+      <p class="links-description">{t.description}</p>
+    </header>
+    <nav class="links-list" aria-label={lang === 'es' ? 'Enlaces principales' : 'Main links'}>
+      {items.map((item) => (
+        <a class="links-item" href={item.url} target={item.external ? '_blank' : undefined} rel={item.external ? (item.affiliate ? 'noopener noreferrer sponsored' : 'noopener noreferrer') : undefined} data-track-event="bio_link_click" data-track-id={item.id}>
+          <span class="links-item-icon" aria-hidden="true">
+            {item.icon === 'briefcase' && <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>}
+            {item.icon === 'monitor' && <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 22h8m-4-4v4"/></svg>}
+            {item.icon === 'gift' && <svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M2 9h20M12 9v12M12 9C6 9 6 3 9 3c2 0 3 3 3 6Zm0 0c6 0 6-6 3-6-2 0-3 3-3 6Z"/></svg>}
+            {item.icon === 'heart' && <svg viewBox="0 0 24 24"><path d="M20.8 4.9a5.4 5.4 0 0 0-7.6 0L12 6.1l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.5a5.4 5.4 0 0 0 0-7.6Z"/></svg>}
+            {item.icon === 'book' && <svg viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/></svg>}
+          </span>
+          <span class="links-item-title">{item.title[lang]}</span>
+          <span class="links-item-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </nav>
+    <section class="links-cta" aria-label={t.ctaPrompt}>
+      <p>{t.ctaPrompt}</p>
+      <a class="links-cta-button" href={contactUrl} data-track-event="bio_contact_click" data-track-id="work-with-mari">{t.cta} <span aria-hidden="true">↗</span></a>
+    </section>
+    <nav class="links-social" aria-label={lang === 'es' ? 'Redes sociales y correo' : 'Social media and email'}>
+      {socials.map((social) => (
+        <a href={social.url} aria-label={social.label} target={social.url.startsWith('https://') ? '_blank' : undefined} rel={social.url.startsWith('https://') ? 'noopener noreferrer' : undefined} data-track-event="bio_social_click" data-track-id={social.id}>
+          {social.id === 'instagram' && <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>}
+          {social.id === 'tiktok' && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v12a5 5 0 1 1-5-5m5-7c1 3 3 5 6 5"/></svg>}
+          {social.id === 'email' && <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/></svg>}
+        </a>
+      ))}
+    </nav>
+    <footer class="links-footer"><small>© byMaeFarias</small>{hasAffiliate && <p>{t.affiliate}</p>}</footer>
+  </div>
+</main>

@@ -1,0 +1,82 @@
+---
+import { resources, resourceSections, resourcesCopy, type ResourceLocale } from '../data/resources';
+interface Props { lang: ResourceLocale }
+const { lang } = Astro.props;
+const t = resourcesCopy[lang];
+const visibleSections = resourceSections.map((section) => ({ ...section, items: resources.filter((r) => r.visible && r.category === section.id) })).filter((section) => section.items.length);
+const freeSection = visibleSections.find((section) => section.id === 'free-downloads');
+const otherSections = visibleSections.filter((section) => section.id !== 'free-downloads');
+const hasAffiliateLinks = resources.some((r) => r.visible && r.links.some((l) => l.affiliate && !!l.url));
+const trackingEvent = (category: string, external: boolean) => category === 'free-downloads' ? 'resource_download' : category === 'amazon-favorites' ? 'amazon_click' : category === 'planners-journals' ? 'planner_click' : external ? 'outbound_click' : 'resource_click';
+const icon = (id: string) => id === 'free-downloads' ? 'download' : id === 'amazon-favorites' ? 'heart' : 'journal';
+---
+<div class="resources-page">
+  <section class="resources-hero" aria-labelledby="resources-heading">
+    <div class="shell resources-hero-inner">
+      <p class="resources-eyebrow">{t.eyebrow}</p>
+      <h1 id="resources-heading">{t.title}</h1>
+      <p class="resources-lead">{t.lead}</p>
+      <div class="resources-hero-note" aria-hidden="true"><span class="resources-note-dash"></span><span class="hand-note">{t.heroNote}</span></div>
+    </div>
+  </section>
+  <div class="shell resources-content">
+    {freeSection && (
+      <section class="resources-downloads-panel" aria-labelledby="resource-section-free-downloads">
+        <div class="resources-card-heading">
+          <span class="resources-heading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg></span>
+          <h2 id="resource-section-free-downloads">{freeSection.label[lang]}</h2>
+        </div>
+        <div class="resources-downloads-grid">
+          {freeSection.items.map((item) => (
+            <article class="resource-card resource-card-download">
+              {item.image && <div class="resource-card-media"><img src={item.image.src} alt={item.image.alt[lang]} loading="lazy" decoding="async" /></div>}
+              <div class="resource-card-content">
+                <h3>{item.title[lang]}</h3>
+                <p>{item.description[lang]}</p>
+                <div class="resource-card-actions">
+                  {item.links.filter((link) => !!link.url).map((link) => (
+                    <a class="resource-action" href={link.url} target={link.external ? '_blank' : undefined} rel={link.external ? (link.affiliate ? 'noopener noreferrer sponsored' : 'noopener noreferrer') : undefined} download={!link.external ? true : undefined} data-track-event={trackingEvent(item.category, !!link.external)} data-track-id={item.id}>
+                      {link.label[lang]} <span aria-hidden="true">{link.external ? '↗' : '↓'}</span>
+                    </a>
+                  ))}
+                  {!item.links.some((link) => !!link.url) && <span class="resource-pending">{t.soon}</span>}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+    {otherSections.length > 0 && (
+      <div class="resources-collections-grid">
+        {otherSections.map((section) => (
+          <section class="resource-collection-card" aria-labelledby={`resource-section-${section.id}`}>
+            <div class="resource-collection-layout">
+              <span class:list={['resources-heading-icon', { 'resources-heading-icon-coral': section.id === 'amazon-favorites' }]} aria-hidden="true">
+                {icon(section.id) === 'heart' ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.9a5.4 5.4 0 0 0-7.6 0L12 6.1l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.5a5.4 5.4 0 0 0 0-7.6Z"/></svg> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="15" height="18" rx="2"/><path d="M9 3v18M12 8h5m-5 4h5"/></svg>}
+              </span>
+              <div class="resource-collection-body">
+                <h2 id={`resource-section-${section.id}`}>{section.label[lang]}</h2>
+                {section.items.map((item) => (
+              <div class="resource-collection-content">
+                {item.image && <div class="resource-collection-media"><img src={item.image.src} alt={item.image.alt[lang]} loading="lazy" decoding="async" /></div>}
+                <p>{item.description[lang]}</p>
+                <div class="resource-card-actions">
+                  {item.links.filter((link) => !!link.url).map((link) => (
+                    <a class="resource-action" href={link.url} target={link.external ? '_blank' : undefined} rel={link.external ? (link.affiliate ? 'noopener noreferrer sponsored' : 'noopener noreferrer') : undefined} data-track-event={trackingEvent(item.category, !!link.external)} data-track-id={item.id}>
+                      {link.label[lang]} <span aria-hidden="true">{link.external ? '↗' : '↓'}</span>
+                    </a>
+                  ))}
+                  {!item.links.some((link) => !!link.url) && <span class="resource-pending">{t.unavailable}</span>}
+                </div>
+              </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ))}
+      </div>
+    )}
+    {hasAffiliateLinks && <p class="resources-disclosure">{t.affiliate}</p>}
+  </div>
+</div>

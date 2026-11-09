@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Contact from '../../components/Contact.astro';
+import Header from '../../components/Header.astro';
+import DigitalServices from '../../components/DigitalServices.astro';
+import { copy } from '../../data/copy';
+import '../../styles/digital-services.css';
+const c = copy.en;
+---
+<BaseLayout lang="en" title="Creative & Digital Services | byMaeFarias" description="Thoughtful short-form video editing and practical digital guidance for creators and small businesses." canonicalPath="/services/" alternatePath="/es/services/">
+  <Header c={{ ...c, alternatePath: '/es/services/' }} />
+  <main>
+    <DigitalServices lang="en" />
+    <Contact c={{ ...c, alternatePath: '/es/services/' }} />
+  </main>
+</BaseLayout>

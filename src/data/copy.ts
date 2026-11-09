@@ -3,7 +3,7 @@ export const copy = {
     lang: 'en',
     alternatePath: '/es/',
     alternateLabel: 'ES',
-    nav: { work: 'Work', about: 'About', contact: 'Contact', cta: 'Work with Mari' },
+    nav: { work: 'Work', about: 'About', services: 'Services', resources: 'Resources', contact: 'Contact', cta: 'Work with Mari', menu: 'Menu' },
     hero: {
       eyebrow: 'LATINA CONTENT CREATOR · TEXAS',
       title1: 'Food · Motherhood',
@@ -23,7 +23,9 @@ export const copy = {
       language: 'Spanish-first creator · English collaborations available.',
       note: 'food · family · real life'
     },
+    footer: { tagline: 'Food · Motherhood · Everyday Lifestyle' },
     contact: {
+      note: 'your brand, naturally part of the story ♡',
       eyebrow: "LET’S WORK TOGETHER",
       title: 'Have something that belongs in the story?',
       body: "Let’s create something natural together.",
@@ -34,7 +36,7 @@ export const copy = {
     lang: 'es',
     alternatePath: '/',
     alternateLabel: 'EN',
-    nav: { work: 'Trabajo', about: 'Sobre mí', contact: 'Contacto', cta: 'Trabajemos juntos' },
+    nav: { work: 'Trabajo', about: 'Sobre mí', services: 'Servicios', resources: 'Recursos', contact: 'Contacto', cta: 'Trabajemos juntos', menu: 'Menú' },
     hero: {
       eyebrow: 'CREADORA DE CONTENIDO LATINA · TEXAS',
       title1: 'Food · Maternidad',
@@ -54,7 +56,9 @@ export const copy = {
       language: 'Contenido principalmente en español · Colaboraciones en inglés disponibles.',
       note: 'comida · familia · vida real'
     },
+    footer: { tagline: 'Food · Maternidad · Everyday Lifestyle' },
     contact: {
+      note: 'tu marca, naturalmente parte de la historia ♡',
       eyebrow: 'TRABAJEMOS JUNTOS',
       title: '¿Tienes un producto que encaja en esta historia?',
       body: 'Creemos algo natural juntos.',

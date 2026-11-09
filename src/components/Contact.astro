@@ -1,33 +1,70 @@
 ---
 import { site } from '../data/site';
+import { contactFormCopy } from '../data/contactForm';
 import Brand from './Brand.astro';
+import '../styles/contact-form.css';
 const { c } = Astro.props;
+const formCopy = contactFormCopy[c.lang as 'en' | 'es'];
+// Web3Forms access keys are public form identifiers, NOT private API secrets.
+// Use a dedicated byMaeFarias key, never another client's key.
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? '';
 ---
 <section class="contact-wrap" id="contact">
-  <div class="contact shell" data-reveal>
+  <div class="contact shell contact-with-form" data-reveal>
     <div class="contact-copy">
       <p class="eyebrow">{c.contact.eyebrow}</p>
       <h2>{c.contact.title}</h2>
       <p>{c.contact.body}</p>
-    </div>
-
-    <div class="contact-actions">
-      <p class="hand-note contact-note">your brand, naturally part of the story ♡</p>
-      <a class="button button-coral contact-button" href={`mailto:${site.email}`}>{c.contact.cta} <span>↗</span></a>
       <div class="contact-details">
         <a class="contact-line" href={`mailto:${site.email}`}>
-          <span class="contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-          </span>
+          <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
           <span>{site.email}</span>
         </a>
-        <a class="contact-line" href={site.instagram} target="_blank" rel="noreferrer">
-          <span class="contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="icon-dot"/></svg>
-          </span>
+        <a class="contact-line" href={site.instagram} target="_blank" rel="noopener noreferrer">
+          <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="icon-dot"/></svg></span>
           <span>{site.handle} ↗</span>
         </a>
       </div>
+    </div>
+
+    <div class="contact-right">
+      <div class="contact-right-intro">
+      <p class="hand-note contact-note">{c.contact.note}</p>
+
+      </div>
+
+    <div class="contact-form-panel" id="contact-form">
+      <h3>{formCopy.title}</h3>
+      <form class="contact-form" data-contact-form data-form-lang={c.lang} data-form-configured={String(Boolean(accessKey))} novalidate>
+        <input type="hidden" name="access_key" value={accessKey} />
+        <input type="hidden" name="subject" value="" />
+        <input type="hidden" name="from_name" value="byMaeFarias Website" />
+        <input type="checkbox" name="botcheck" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="contact-form-row">
+          <label>{formCopy.name} <span aria-hidden="true">*</span><input name="name" type="text" autocomplete="name" maxlength="120" placeholder={formCopy.namePlaceholder} required /></label>
+          <label>{formCopy.email} <span aria-hidden="true">*</span><input name="email" type="email" autocomplete="email" maxlength="254" placeholder={formCopy.emailPlaceholder} required /></label>
+        </div>
+        <label>{formCopy.inquiry} <span aria-hidden="true">*</span>
+          <select name="inquiry_type" required>
+            <option value="">{formCopy.select}</option>
+            <option value="ugc">{formCopy.ugc}</option>
+            <option value="services">{formCopy.digital}</option>
+            <option value="general">{formCopy.general}</option>
+          </select>
+        </label>
+        <label class="contact-service-field" data-service-field hidden>{formCopy.service}
+          <select name="service" disabled>
+            <option value="">{formCopy.select}</option>
+            <option value="short-form-video-editing">{formCopy.editing}</option>
+            <option value="digital-setup-guidance">{formCopy.setup}</option>
+          </select>
+        </label>
+        <label>{formCopy.message} <span aria-hidden="true">*</span><textarea name="message" rows="5" maxlength="5000" placeholder={formCopy.messagePlaceholder} required></textarea></label>
+        <div class="h-captcha" data-captcha="true" data-size="normal" data-theme="light"></div>
+        <button class="button button-coral contact-form-submit" type="submit" disabled={!accessKey}>{formCopy.submit} <span aria-hidden="true">↗</span></button>
+        <p class="contact-form-status" role="status" aria-live="polite" data-form-status>{accessKey ? '' : formCopy.setupRequired}</p>
+      </form>
+    </div>
     </div>
     <span class="contact-shape contact-shape-1" aria-hidden="true"></span>
     <span class="contact-shape contact-shape-2" aria-hidden="true"></span>
@@ -35,7 +72,92 @@ const { c } = Astro.props;
 </section>
 <footer class="footer shell">
   <Brand small={true} />
-  <span>Food · Motherhood · Everyday Lifestyle</span>
+  <span>{c.footer.tagline}</span>
   <span>{site.location}</span>
   <a href={c.alternatePath}>{c.lang.toUpperCase()} / {c.alternateLabel}</a>
 </footer>
+<script src="https://web3forms.com/client/script.js" is:inline async defer></script>
+<script>
+  import { contactFormCopy } from '../data/contactForm';
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const lang = form.dataset.formLang === 'es' ? 'es' : 'en';
+    const t = contactFormCopy[lang];
+    const inquiry = form.elements.namedItem('inquiry_type') as HTMLSelectElement;
+    const service = form.elements.namedItem('service') as HTMLSelectElement;
+    const subject = form.elements.namedItem('subject') as HTMLInputElement;
+    const serviceField = form.querySelector<HTMLElement>('[data-service-field]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+    const status = form.querySelector<HTMLElement>('[data-form-status]')!;
+    let sending = false;
+    const labels: Record<string, string> = { ugc: t.ugc, services: t.digital, general: t.general };
+    const serviceLabels: Record<string, string> = { 'short-form-video-editing': t.editing, 'digital-setup-guidance': t.setup };
+    const update = () => {
+      const isDigital = inquiry.value === 'services';
+      serviceField.hidden = !isDigital;
+      service.disabled = !isDigital;
+      service.required = isDigital;
+      if (!isDigital) service.value = '';
+      const kind = labels[inquiry.value] ?? t.general;
+      subject.value = `${t.subjectPrefix} | ${kind}${isDigital && service.value ? ' | ' + (serviceLabels[service.value] ?? service.value) : ''}`;
+    };
+    const prefill = () => {
+      const params = new URLSearchParams(window.location.search);
+      const inquiryParam = params.get('inquiry');
+      const serviceParam = params.get('service');
+      if (inquiryParam && ['ugc', 'services', 'general'].includes(inquiryParam)) inquiry.value = inquiryParam;
+      if (serviceParam && serviceParam in serviceLabels) { inquiry.value = 'services'; service.value = serviceParam; }
+      update();
+    };
+    prefill();
+    inquiry.addEventListener('change', update);
+    service.addEventListener('change', update);
+    window.addEventListener('popstate', prefill);
+    document.addEventListener('click', (event) => {
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
+      if (!link) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin || !['#contact', '#contact-form'].includes(url.hash)) return;
+      const params = url.searchParams;
+      if (params.has('inquiry') || params.has('service')) {
+        if (params.has('inquiry') && ['ugc', 'services', 'general'].includes(params.get('inquiry')!)) inquiry.value = params.get('inquiry')!;
+        if (params.has('service') && params.get('service')! in serviceLabels) { inquiry.value = 'services'; service.value = params.get('service')!; }
+        update();
+      }
+    });
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (sending || form.dataset.formConfigured !== 'true') return;
+      update();
+      if (!form.reportValidity()) { status.textContent = t.required; return; }
+      const captchaToken = form.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]')?.value;
+      if (!captchaToken) { status.textContent = t.captchaRequired; return; }
+      sending = true;
+      submit.disabled = true;
+      submit.textContent = t.sending;
+      status.textContent = '';
+      try {
+        const payload = Object.fromEntries(new FormData(form).entries());
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error('Web3Forms rejected submission');
+        status.textContent = t.success;
+        form.reset();
+        const captcha = (window as Window & { hcaptcha?: { reset: () => void } }).hcaptcha;
+        captcha?.reset();
+        update();
+        // GA4 tracking uses the existing global gtag function when available.
+        const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+        gtag?.('event', 'generate_lead', { form_id: 'contact', inquiry_type: payload.inquiry_type, service_id: payload.service || 'none' });
+      } catch {
+        status.textContent = t.error;
+      } finally {
+        sending = false;
+        submit.disabled = false;
+        submit.textContent = t.submit + ' ↗';
+      }
+    });
+  });
+</script>

@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LinksHub from '../../components/LinksHub.astro';
+import { linksCopy } from '../../data/links';
+const t = linksCopy.en;
+---
+<BaseLayout lang="en" title={t.pageTitle} description={t.pageDescription} canonicalPath="/links/" alternatePath="/es/links/">
+  <LinksHub lang="en" />
+</BaseLayout>

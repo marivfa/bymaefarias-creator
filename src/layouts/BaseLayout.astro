@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import '../styles/header.css';
+import { initAnalyticsClicks } from '../lib/analytics';
 interface Props {
   lang: 'en' | 'es';
   title: string;
@@ -58,6 +60,21 @@ const alternate = new URL(alternatePath, Astro.site);
     content={new URL('/images/og/bymaefarias-og.jpg', Astro.site)}
   />
 
+  <!-- Google Analytics 4 -->
+<script
+  is:inline
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-HNX2YC54MF"
+></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-HNX2YC54MF');
+</script>
+
   <!-- Structured data -->
   <script
     type="application/ld+json"
@@ -80,6 +97,7 @@ const alternate = new URL(alternatePath, Astro.site);
 </head>
   <body>
     <slot />
+    <script>initAnalyticsClicks();</script>
     <script is:inline>
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
